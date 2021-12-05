@@ -1,5 +1,4 @@
 locals {
-  # home_ip      = jsondecode(data.http.ip.body).origin
   cf_zone_name = "keife.org"
   inbound_rules = {
     http = {
@@ -24,13 +23,6 @@ data "cloudflare_zones" "this" {
     name = local.cf_zone_name
   }
 }
-
-# data "http" "ip" {
-#   url = "http://httpbin.org/ip"
-#   request_headers = {
-#     Accept = "application/json"
-#   }
-# }
 
 resource "random_pet" "this" {}
 
@@ -80,6 +72,6 @@ output "droplet_ip" {
   value = digitalocean_droplet.this.ipv4_address
 }
 
-# output "home_ip" {
-#   value = local.home_ip
-# }
+output "quake_url" {
+  value = cloudflare_record.this.hostname
+}
