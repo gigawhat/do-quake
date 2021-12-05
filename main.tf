@@ -1,17 +1,7 @@
 locals {
-  home_ip      = jsondecode(data.http.ip.body).origin
+  # home_ip      = jsondecode(data.http.ip.body).origin
   cf_zone_name = "keife.org"
   inbound_rules = {
-    ssh = {
-      port_range       = "22"
-      protocol         = "tcp"
-      source_addresses = [local.home_ip]
-    }
-    kube-api = {
-      port_range       = "6443"
-      protocol         = "tcp"
-      source_addresses = [local.home_ip]
-    }
     http = {
       port_range       = "8080"
       protocol         = "tcp"
@@ -35,12 +25,12 @@ data "cloudflare_zones" "this" {
   }
 }
 
-data "http" "ip" {
-  url = "http://httpbin.org/ip"
-  request_headers = {
-    Accept = "application/json"
-  }
-}
+# data "http" "ip" {
+#   url = "http://httpbin.org/ip"
+#   request_headers = {
+#     Accept = "application/json"
+#   }
+# }
 
 resource "random_pet" "this" {}
 
@@ -72,28 +62,9 @@ resource "digitalocean_droplet" "this" {
   name      = random_pet.this.id
   region    = "sfo3"
   size      = "s-1vcpu-1gb"
-  tags      = ["quaky"]
+  tags      = ["quaky", "ssh"]
   ssh_keys  = [24072603]
   user_data = file("${path.module}/files/user-data.yaml")
-
-  provisioner "remote-exec" {
-    inline = ["mkdir -p /var/lib/rancher/k3s/server/manifests"]
-    connection {
-      type = "ssh"
-      user = "root"
-      host = self.ipv4_address
-    }
-  }
-
-  provisioner "file" {
-    source      = "files/kube-quake.yaml"
-    destination = "/var/lib/rancher/k3s/server/manifests/kube-quake.yaml"
-    connection {
-      type = "ssh"
-      user = "root"
-      host = self.ipv4_address
-    }
-  }
 }
 
 resource "cloudflare_record" "this" {
@@ -109,6 +80,6 @@ output "droplet_ip" {
   value = digitalocean_droplet.this.ipv4_address
 }
 
-output "home_ip" {
-  value = local.home_ip
-}
+# output "home_ip" {
+#   value = local.home_ip
+# }
