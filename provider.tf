@@ -31,5 +31,3 @@ provider "digitalocean" {}
 provider "random" {}
 
 provider "cloudflare" {}
-
-provider "http" {}

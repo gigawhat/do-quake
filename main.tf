@@ -73,5 +73,5 @@ output "droplet_ip" {
 }
 
 output "quake_url" {
-  value = cloudflare_record.this.hostname
+  value = "http://${cloudflare_record.this.hostname}:8080"
 }
