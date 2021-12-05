@@ -17,6 +17,13 @@ terraform {
       version = "2.1.0"
     }
   }
+  backend "remote" {
+    hostname     = "keife-lab.scalr.io"
+    organization = "env-tngeqhukniectbg"
+    workspaces {
+      name = "do-quake"
+    }
+  }
 }
 
 provider "digitalocean" {}
