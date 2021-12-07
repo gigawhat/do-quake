@@ -6,11 +6,6 @@ locals {
       protocol         = "tcp"
       source_addresses = ["0.0.0.0/0", "::/0"]
     }
-    http2 = {
-      port_range       = "8081"
-      protocol         = "tcp"
-      source_addresses = ["0.0.0.0/0", "::/0"]
-    }
   }
   outbound_rules = {
     icmp = {}
